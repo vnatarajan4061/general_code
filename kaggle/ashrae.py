@@ -13,7 +13,6 @@ import gc
 DATA_PATH = "../input/ashrae-energy-prediction/"
 
 # %% [code]
-# Original code from https://www.kaggle.com/gemartin/load-data-reduce-memory-usage by @gemartin
 
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from pandas.api.types import is_categorical_dtype
@@ -64,8 +63,6 @@ def reduce_mem_usage(df, use_float16=False):
 # %% [code]
 train_df = pd.read_csv(DATA_PATH + 'train.csv')
 
-
-# Remove outliers
 building_df = pd.read_csv(DATA_PATH + 'building_metadata.csv')
 weather_df = pd.read_csv(DATA_PATH + 'weather_train.csv')
 
