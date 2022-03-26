@@ -32,8 +32,10 @@ class player_team_information:
 
         return team_id_data
 
-    def team_roster(self):
-        statsapi.roster()
+    def team_roster(self, team_df):
+        for tm_id in team_df.Team_id.unique():
+            for yr in self.main_season:
+                statsapi.roster(tm_id, season=yr)
 
     def player_id_lookup(self):
         statsapi.lookup_player()
