@@ -12,6 +12,11 @@ get_player_stats = statsapi.get('person', {'personId': 547989, 'hydrate': stats_
 
 get_player_stats
 
+player_team_info = player_team_information()
+
+team_id_data = player_team_information().team_id_lookup()
+game_team_ids = player_team_information().scheduled_games("04/09/2019")
+gameday_roster = player_team_information().team_roster(game_team_ids)
 
 
-player_team_information().team_id_lookup()
+gameday_roster
