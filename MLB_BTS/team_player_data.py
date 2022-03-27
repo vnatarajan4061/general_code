@@ -63,10 +63,16 @@ class player_team_information:
 
         return roster_df
 
-    def player_id_lookup(self):
-        statsapi.lookup_player()
+    def player_id_lookup(self, roster_data):
+        player_id_list = []
+        for name in roster_data.Roster:
+            player_id = statsapi.lookup_player(name, season=roster_data.Season.unique()[0])
 
+            player_id_list.append(player_id[0]['id'])
 
+        roster_data['Player_id'] = player_id_list
+
+        return roster_data
 
 if __name__ == 'team_player_data':
     player_team_information()
