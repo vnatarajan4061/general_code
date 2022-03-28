@@ -41,8 +41,9 @@ class player_team_information:
 
         team_game_ids = {}
         for game in game_list:
-            team_game_ids[game['away_id']] = game_date
-            team_game_ids[game['home_id']] = game_date
+            if game['game_type'] == 'R':
+                team_game_ids[game['away_id']] = game_date
+                team_game_ids[game['home_id']] = game_date
 
         return team_game_ids
 
