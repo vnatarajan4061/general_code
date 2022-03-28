@@ -12,7 +12,7 @@ class player_team_information:
 
         self.main_season = [yr for yr in range(2019,datetime.datetime.now().year) if yr != 2020]
 
-
+    # Only run this function once a year to get the ids for each team
     def team_id_lookup(self):
 
         team_id_data = pd.DataFrame()
@@ -57,7 +57,7 @@ class player_team_information:
                 if player_position != 'P':
                     player_name_list.append(" ".join(player.split()[2:]))
                     tm_id_list.append(tm_id)
-                    season_list.append(2019)
+                    season_list.append(pd.to_datetime(game_date).year)
                     date_list.append(pd.to_datetime(game_date))
 
         roster_df = pd.DataFrame({'Team_id':tm_id_list,'Season':season_list,'Gameday_date':date_list,'Roster':player_name_list})
@@ -74,6 +74,20 @@ class player_team_information:
         roster_data['Player_id'] = player_id_list
 
         return roster_data
+
+    def player_stats(self, roster_player_data, season_start_date, time_period_final_date):
+        stats_data = pd.DataFrame()
+        for playerid in roster_player_data.Player_id:
+            stats_hydration = f'stats(group=[hitting],type=[byDateRange],startDate={season_start_date},endDate={time_period_final_date},sportId=1)'
+            get_player_stats = statsapi.get('person', {'personId': playerid, 'hydrate': stats_hydration})
+            stats = get_player_stats['people'][0]['stats'][0]['splits'][0]['stat']
+
+            stats_data = stats_data.append(stats, ignore_index=True)
+
+        player_stats_data = roster_player_data.merge(stats_data, left_index=True, right_index=True, how='inner')
+
+        return player_stats_data
+
 
 if __name__ == 'team_player_data':
     player_team_information()
