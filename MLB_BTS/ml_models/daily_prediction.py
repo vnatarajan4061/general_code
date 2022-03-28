@@ -6,8 +6,6 @@ from MLB_BTS.statsapi_utils.team_player_data import player_team_information
 
 
 
-statsapi.schedule("09/28/2019")
-
 for dates in ["03/26/2019","03/27/2019","03/28/2019","04/09/2019"]:
 
     trial = player_team_info.scheduled_games(dates)

@@ -13,6 +13,7 @@ class player_team_information:
         self.main_season = [yr for yr in range(2019,datetime.datetime.now().year) if yr != 2020]
 
     # Only run this function once a year to get the ids for each team
+    # Do I even need this function?
     def team_id_lookup(self):
 
         team_id_data = pd.DataFrame()
@@ -33,8 +34,6 @@ class player_team_information:
         team_id_data.Team_id = team_id_data.Team_id.astype(int)
 
         return team_id_data
-
-##### Will need a function to get the games on that date so we can get rid of the try pass below
 
     def scheduled_games(self, game_date):
         game_list = statsapi.schedule(date=game_date)
@@ -75,7 +74,7 @@ class player_team_information:
 
         return roster_data
 
-    def player_stats(self, roster_player_data, season_start_date, time_period_final_date):
+    def player_basic_stats(self, roster_player_data, season_start_date, time_period_final_date):
         stats_data = pd.DataFrame()
         for playerid in roster_player_data.Player_id:
             stats_hydration = f'stats(group=[hitting],type=[byDateRange],startDate={season_start_date},endDate={time_period_final_date},sportId=1)'

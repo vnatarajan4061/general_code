@@ -8,14 +8,14 @@ class loading_data:
         self.seasons_info = {'Seasons':[
                             {'Season':2019,'Start_Date':"03/28/2019","End_Date":"09/30/2019"},
                             {'Season':2021,'Start_Date':"04/01/2021","End_Date":"10/05/2021"}]}
+        self.player_team_info = player_team_information()
 
-    def
+    def base_stats(self):
+        for season in self.seasons_info['Seasons']:
+            for dates in season['Start_Date']
+            self.player_team_info.scheduled_games()
 
 
 
 if __name__ == "main":
     loading_data()
-
-
-
-test['Seasons'][]['Season']
