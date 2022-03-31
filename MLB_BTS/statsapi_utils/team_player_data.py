@@ -63,12 +63,12 @@ class player_team_information:
 
         return roster_df
 
-    def player_id_lookup(self, roster_data):
-        player_id_list = []
-        for name in roster_data.Roster:
-            player_id = statsapi.lookup_player(name, season=roster_data.Season.unique()[0])
-
-            player_id_list.append(player_id[0]['id'])
+    def player_id_lookup(self, roster_data, season):
+        player_id_list = [statsapi.lookup_player(name,season=season)[0]['id'] for name in roster_data.Roster]
+        # for name in roster_data.Roster:
+        #     player_id = statsapi.lookup_player(name, season=season)
+        #
+        #     player_id_list.append(player_id[0]['id'])
 
         roster_data['Player_id'] = player_id_list
 
@@ -86,6 +86,22 @@ class player_team_information:
         player_stats_data = roster_player_data.merge(stats_data, left_index=True, right_index=True, how='inner')
 
         return player_stats_data
+
+    def player_got_hit(self, roster_player_data, game_date):
+        hit_list = []
+        for playerid in roster_player_data.Player_id:
+            stats_hydration = f'stats(group=[hitting],type=[byDateRange],startDate={game_date},endDate={game_date},sportId=1)'
+            get_player_stats = statsapi.get('person', {'personId': playerid, 'hydrate': stats_hydration})
+            number_of_hits = get_player_stats['people'][0]['stats'][0]['splits'][0]['stat']['hits']
+
+            if number_of_hits > 0:
+                hit_list.append(True)
+            else:
+                hit_list.append(False)
+
+        roster_player_data['got_hit'] = hit_list
+
+        return roster_player_data
 
 
 if __name__ == 'team_player_data':
