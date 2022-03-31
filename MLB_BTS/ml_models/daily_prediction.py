@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import time
 import datetime
 import statsapi
 from MLB_BTS.statsapi_utils.team_player_data import player_team_information
@@ -15,12 +16,9 @@ for dates in ["03/26/2019","03/27/2019","03/28/2019","04/09/2019"]:
     else:
         print(trial)
 
-print(%%timeit)
-
-
 def final_stats_data(season_start_date,date,season):
 
-    %%timeit
+    start = time.time()
     player_team_info = player_team_information()
     game_ids = player_team_info.scheduled_games(date)
     team_roster = player_team_info.team_roster(game_ids)
@@ -28,11 +26,20 @@ def final_stats_data(season_start_date,date,season):
     player_stats = player_team_info.player_basic_stats(player_ids,season_start_date,(pd.to_datetime(date) - datetime.timedelta(1)).strftime("%m/%d/%Y"))
     player_stats['got_hit'] = player_team_info.player_got_hit(player_stats.Player_id,date)
     player_stats_final = player_stats[player_stats.got_hit.notnull()]
+    end = time.time()
+
+    print("Time elapsed:", end-start)
 
     return player_stats_final
 
 
-final_stats_data('03/28/2019','04/19/2019',2019)
+
+
+
+final_data = final_stats_data('03/28/2019','04/19/2019',2019)
+
+
+
 
 game_date = "04/19/2019"
 stats_hydration = f'stats(group=[hitting],type=[byDateRange],startDate={game_date},endDate={game_date},sportId=1)'
