@@ -79,29 +79,38 @@ class player_team_information:
         for playerid in roster_player_data.Player_id:
             stats_hydration = f'stats(group=[hitting],type=[byDateRange],startDate={season_start_date},endDate={time_period_final_date},sportId=1)'
             get_player_stats = statsapi.get('person', {'personId': playerid, 'hydrate': stats_hydration})
-            stats = get_player_stats['people'][0]['stats'][0]['splits'][0]['stat']
+
+            if len(get_player_stats['people'][0]['stats'][0]['splits']) == 0:
+                continue
+            else:
+                stats = get_player_stats['people'][0]['stats'][0]['splits'][0]['stat']
+
+            stats['Player_id'] = playerid
 
             stats_data = stats_data.append(stats, ignore_index=True)
 
-        player_stats_data = roster_player_data.merge(stats_data, left_index=True, right_index=True, how='inner')
+        player_stats_data = roster_player_data.merge(stats_data, left_on = 'Player_id', right_on= 'Player_id', how='inner')
 
         return player_stats_data
 
-    def player_got_hit(self, roster_player_data, game_date):
+    def player_got_hit(self, player_id_list, game_date):
         hit_list = []
-        for playerid in roster_player_data.Player_id:
+        for playerid in player_id_list:
             stats_hydration = f'stats(group=[hitting],type=[byDateRange],startDate={game_date},endDate={game_date},sportId=1)'
             get_player_stats = statsapi.get('person', {'personId': playerid, 'hydrate': stats_hydration})
-            number_of_hits = get_player_stats['people'][0]['stats'][0]['splits'][0]['stat']['hits']
 
-            if number_of_hits > 0:
-                hit_list.append(True)
+            if len(get_player_stats['people'][0]['stats'][0]['splits']) == 0:
+                hit_list.append(np.nan)
+                continue
             else:
-                hit_list.append(False)
+                number_of_hits = get_player_stats['people'][0]['stats'][0]['splits'][0]['stat']['hits']
 
-        roster_player_data['got_hit'] = hit_list
+                if number_of_hits > 0:
+                    hit_list.append(True)
+                else:
+                    hit_list.append(False)
 
-        return roster_player_data
+        return hit_list
 
 
 if __name__ == 'team_player_data':
