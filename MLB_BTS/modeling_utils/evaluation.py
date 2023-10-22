@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 
-class evaluation:
+class Evaluation:
     def __init__(self):
         pass
 
@@ -10,4 +10,4 @@ class evaluation:
 
 
 if __name__ == 'evaluation':
-    evaluation()
+    Evaluation()

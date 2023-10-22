@@ -3,7 +3,7 @@ import numpy as np
 import datetime
 import statsapi
 
-class player_team_information:
+class PlayerTeamInformation:
     def __init__(self):
         self.team_list = ['diamondbacks','braves','orioles','red sox','cubs','white sox'
         ,'reds','guardians','rockies','tigers','astros','royals','angels','dodgers'
@@ -114,4 +114,4 @@ class player_team_information:
 
 
 if __name__ == 'team_player_data':
-    player_team_information()
+    PlayerTeamInformation()
