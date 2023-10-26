@@ -3,13 +3,14 @@ import numpy as np
 import time
 import datetime
 import statsapi
-from MLB_BTS.statsapi_utils.team_player_data import player_team_information
+from MLB_BTS.statsapi_utils.team_player_data import PlayerTeamInformation 
 
 
 
 for dates in ["03/26/2019","03/27/2019","03/28/2019","04/09/2019"]:
 
-    trial = player_team_info.scheduled_games(dates)
+    pti = PlayerTeamInformation()
+    trial = pti.scheduled_games(dates)
 
     if len(trial) == 0:
         continue
@@ -19,12 +20,11 @@ for dates in ["03/26/2019","03/27/2019","03/28/2019","04/09/2019"]:
 def final_stats_data(season_start_date,date,season):
 
     start = time.time()
-    player_team_info = player_team_information()
-    game_ids = player_team_info.scheduled_games(date)
-    team_roster = player_team_info.team_roster(game_ids)
-    player_ids = player_team_info.player_id_lookup(team_roster,season=season)
-    player_stats = player_team_info.player_basic_stats(player_ids,season_start_date,(pd.to_datetime(date) - datetime.timedelta(1)).strftime("%m/%d/%Y"))
-    player_stats['got_hit'] = player_team_info.player_got_hit(player_stats.Player_id,date)
+    game_ids = pti.scheduled_games(date)
+    team_roster = pti.team_roster(game_ids)
+    player_ids = pti.player_id_lookup(team_roster,season=season)
+    player_stats = pti.player_basic_stats(player_ids,season_start_date,(pd.to_datetime(date) - datetime.timedelta(1)).strftime("%m/%d/%Y"))
+    player_stats['got_hit'] = pti.player_got_hit(player_stats.Player_id,date)
     player_stats_final = player_stats[player_stats.got_hit.notnull()]
     end = time.time()
 
